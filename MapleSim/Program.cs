@@ -24,25 +24,26 @@ namespace MapleSim.Sim
 
 			Script_Blazyy( pl );
 
-			Script_Meteor( pl );
+			Script_Damage( pl );
 
 			//Script_Scroll( pl );
 
 			Console.Read();
 		}
 
-		private static void Script_Blazyy( Player pl )
+		private static void Script_Blazyy( Mobile m )
 		{
-			pl.Name = "Blazyy";
-			pl.Level = 175;
-			pl.HitsMaxSeed = 2506;
-			pl.ManaMaxSeed = 22271;
-			pl.StrRaw = 4;
-			pl.DexRaw = 4;
-			pl.IntRaw = 893;
-			pl.LukRaw = 4;
-			pl.Skills[(int)SkillName.ElementalAmplification] = 30;
-			pl.Skills[(int)SkillName.MeteorShower] = 30;
+			m.Name = "Blazyy";
+			m.Level = 175;
+			m.HitsMaxSeed = 2506;
+			m.ManaMaxSeed = 22271;
+			m.StrRaw = 4;
+			m.DexRaw = 4;
+			m.IntRaw = 893;
+			m.LukRaw = 4;
+			m.Skills[(int)SkillName.ElementalAmplification] = 30;
+			m.Skills[(int)SkillName.MeteorShower] = 30;
+			m.Skills[(int)SkillName.FireDemon] = 30;
 
 			// TODO: Instantiate and equip individual equips
 			BaseEquipment ringForEquips = new DummyEquipment();
@@ -55,37 +56,45 @@ namespace MapleSim.Sim
 			ringForEquips.Attributes[AttributeName.Int] = 138;
 			ringForEquips.Attributes[AttributeName.Luk] = 72;
 			ringForEquips.Attributes[AttributeName.Magic] = 190;
-			pl.Equip( ringForEquips );
+			m.Equip( ringForEquips );
 
 			// TODO: Program buff skills
 			BaseEquipment ringForBuffs = new DummyEquipment();
 			ringForBuffs.Name = "Blazyy's Buffs";
 			ringForBuffs.Layer = Layer.Ring;
-			ringForBuffs.Attributes[AttributeName.Int] = pl.IntRaw / 10; // Maple Warrior
+			ringForBuffs.Attributes[AttributeName.Int] = m.IntRaw / 10; // Maple Warrior
 			ringForBuffs.Attributes[AttributeName.Magic] = 20; // Meditation
-			pl.Equip( ringForBuffs );
+			m.Equip( ringForBuffs );
 
 			BaseEquipment wand = new ElementalWand5();
-			pl.Equip( wand );
+			m.Equip( wand );
 		}
 
-		private static void Script_Meteor( Player pl )
+		private static void Script_Damage( Mobile m )
 		{
-			Console.WriteLine( "Int: {0}", pl.GetAttribute( AttributeName.Int ) );
-			Console.WriteLine( "TMA: {0}", pl.GetAttribute( AttributeName.Magic ) );
-			Console.WriteLine( "Elemental Amplification: {0}", pl.Skills[(int)SkillName.ElementalAmplification] );
-			Console.WriteLine( "Meteor Shower: {0}", pl.Skills[(int)SkillName.MeteorShower] );
+			Console.WriteLine( "Int: {0}", m.GetAttribute( AttributeName.Int ) );
+			Console.WriteLine( "TMA: {0}", m.GetAttribute( AttributeName.Magic ) );
+			Console.WriteLine( "Elemental Amplification: {0}", m.Skills[(int)SkillName.ElementalAmplification] );
+			Console.WriteLine( "Meteor Shower: {0}", m.Skills[(int)SkillName.MeteorShower] );
+			Console.WriteLine( "Fire Demon: {0}", m.Skills[(int)SkillName.FireDemon] );
 
-			BaseMonster monster = new MiniGoldMartialArtist();
+			BaseMonster monster;
+
+			monster = new MiniGoldMartialArtist();
 			AttackSpell.Target = monster;
-			pl.UseSkill( (int)SkillName.MeteorShower );
+			m.UseSkill( (int)SkillName.MeteorShower );
+			m_Logger.Flush();
+
+			monster = new Vikerola();
+			AttackSpell.Target = monster;
+			m.UseSkill( (int)SkillName.FireDemon );
 			m_Logger.Flush();
 		}
 
-		private static void Script_Scroll( Player pl )
+		private static void Script_Scroll( Mobile m )
 		{
 			Console.WriteLine( "Overall Int" );
-			ScrollSim( pl,
+			ScrollSim( m,
 				typeof( Bathrobe ),
 				new ScrollStrategy(
 					new PassObjective( typeof( ScrollForOverallForInt10 ), 1, 1 ),
@@ -95,7 +104,7 @@ namespace MapleSim.Sim
 			m_Logger.Flush();
 
 			Console.WriteLine( "Work Gloves Attack" );
-			ScrollSim( pl,
+			ScrollSim( m,
 				typeof( WorkGloves ),
 				new ScrollStrategy(
 					new PassObjective( typeof( ScrollForGlovesForAttack10 ), 1, 1 ),
@@ -105,7 +114,7 @@ namespace MapleSim.Sim
 			m_Logger.Flush();
 
 			Console.WriteLine( "Yellow Marker Attack" );
-			ScrollSim( pl,
+			ScrollSim( m,
 				typeof( YellowMarker ),
 				new ScrollStrategy(
 					new FillObjective( typeof( ScrollForGlovesForAttack60 ) ) ),
@@ -113,7 +122,7 @@ namespace MapleSim.Sim
 			m_Logger.Flush();
 		}
 
-		private static void ScrollSim( Player pl, Type equipType, ScrollStrategy strategy, OwlItemEvaluator evaluator )
+		private static void ScrollSim( Mobile m, Type equipType, ScrollStrategy strategy, OwlItemEvaluator evaluator )
 		{
 			const int trials = 10000;
 
@@ -127,7 +136,7 @@ namespace MapleSim.Sim
 
 				totalCost += EconomyData.GetValue( equip );
 
-				strategy.Perform( pl, equip );
+				strategy.Perform( m, equip );
 
 				foreach ( BaseScroll scroll in strategy.Scrolls )
 					totalCost += EconomyData.GetValue( scroll );

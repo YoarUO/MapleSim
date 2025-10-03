@@ -10,9 +10,11 @@ namespace MapleSim.Scripts.Skills
 			: base( (int)SkillName.MeteorShower )
 		{
 			Name = "Meteor Shower";
-			SpellAttackBase = 320;
-			SpellAttackMult = 10;
-			MasteryBase = 10; // TODO
+			SpellAttackBase = 330;
+			SpellAttackStep = 10;
+			MasteryBase = 15; // TODO
+			MasteryStep = 5;
+			LevelsPerMasteryStep = 3;
 			Elemental = ElementalName.Fire;
 		}
 
@@ -22,7 +24,7 @@ namespace MapleSim.Scripts.Skills
 			if ( level <= 20 )
 				return base.GetSpellAttack( level );
 			else
-				return SpellAttackBase + 20 * SpellAttackMult + ( level - 20 ) * 5;
+				return SpellAttackBase + 19 * SpellAttackStep + ( level - 20 ) * 5;
 		}
 	}
 }

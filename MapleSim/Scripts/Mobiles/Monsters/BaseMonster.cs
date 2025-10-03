@@ -7,10 +7,16 @@ namespace MapleSim.Scripts.Mobiles
 	{
 		private Attributes m_Attributes;
 		private int m_Knockback;
+		private ElementalName m_ElementalWeakness;
+		private ElementalName m_ElementalStrength;
+		private ElementalName m_ElementalImmunity;
 		private int m_GiveExperience;
 
 		public Attributes Attributes { get { return m_Attributes; } }
 		public int Knockback { get { return m_Knockback; } set { m_Knockback = value; } }
+		public ElementalName ElementalWeakness { get { return m_ElementalWeakness; } set { m_ElementalWeakness = value; } }
+		public ElementalName ElementalStrength { get { return m_ElementalStrength; } set { m_ElementalStrength = value; } }
+		public ElementalName ElementalImmunity { get { return m_ElementalImmunity; } set { m_ElementalImmunity = value; } }
 		public int GiveExperience { get { return m_GiveExperience; } set { m_GiveExperience = value; } }
 
 		public BaseMonster()
